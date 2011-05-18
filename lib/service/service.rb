@@ -8,7 +8,7 @@ module Minus5
   module Service
 
     module Runner
-      extend M5::Log
+      extend Minus5::Log
       extend self
 
       #Conventions:
@@ -19,14 +19,14 @@ module Minus5
       #  command is starting script name
       #  runs command on sevice
       def run
-        command = M5.start_script_name
-        app_root = M5.path_relative_to_start_script("/..")
+        command = Minus5.start_script_name
+        app_root = Minus5.path_relative_to_start_script("/..")
         service_name = File.basename(app_root)
         class_name = service_name.camelize
 
         require "#{app_root}/lib/#{service_name}.rb"
-        config = M5.load_config("#{app_root}/config/service.yml")
-        config[:app_root] = app_root
+        config = Minus5.load_config("#{app_root}/config/service.yml")
+        config = config.merge default_options(app_root, service_name)
 
         service = eval(class_name).new(config)
         if service.respond_to?(command)  
@@ -35,15 +35,31 @@ module Minus5
           log "No method #{command} in #{class_name}!"
         end        
       end
+
+      private
+
+      def default_options(app_root, service_name)
+        {
+          :app_root => app_root,
+          :daemon => { 
+            :backtrace  => true,
+            :dir_mode   => :normal,
+            :log_output => true,
+            :app_name   => service_name,
+            :dir        => app_root + '/tmp/pids',               
+            :log_dir    => app_root + '/log',
+          }
+        }
+      end
     end
 
     class Starter
-      include M5::Log
+      include Minus5::Log
 
       def initialize(options)
         @options = options[:daemon]
-        @app_root = options[:app_root]
-        add_defaults
+        # @app_root = options[:app_root]
+        # add_defaults
       end
 
       def stop
@@ -84,21 +100,21 @@ module Minus5
         end
       end
 
-      def add_defaults
-        @options.reverse_merge!({ 
-                                  :backtrace  => true,
-                                  :dir_mode   => :normal,
-                                  :log_output => true,
-                                  :app_name   => "unnamed_service",
-                                  :dir        => @app_root + '/tmp/pids',               
-                                  :log_dir    => @app_root + '/log',
-                                })
-      end
+      # def add_defaults
+      #   @options.reverse_merge!({ 
+      #                             :backtrace  => true,
+      #                             :dir_mode   => :normal,
+      #                             :log_output => true,
+      #                             :app_name   => "unnamed_service",
+      #                             :dir        => @app_root + '/tmp/pids',               
+      #                             :log_dir    => @app_root + '/log',
+      #                           })
+      # end
 
     end
     
     class Base
-      include M5::Log
+      include Minus5::Log
 
       def initialize(options)
         @terminate = false
@@ -106,8 +122,8 @@ module Minus5
       end
 
       def start
-        return unless @options[:daemon]
-        M5::Service::Starter.new(@options).start
+        #return unless @options[:daemon]
+        Minus5::Service::Starter.new(@options).start
         Signal.trap("TERM") do
           @terminate = true
         end
@@ -121,8 +137,8 @@ module Minus5
       end
       
       def stop
-        return unless @options[:daemon]
-        M5::Service::Starter.new(@options).stop
+        #return unless @options[:daemon]
+        Minus5::Service::Starter.new(@options).stop
       end
 
       protected
