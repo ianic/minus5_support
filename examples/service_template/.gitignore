@@ -1,0 +1,6 @@
+config/service.yml
+
+*.log
+*.output
+*.pid
+pids

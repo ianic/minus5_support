@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+#require 'minus5_support'
+require "#{File.expand_path(File.dirname(__FILE__))}/../../../lib/minus5_support"
+Minus5::Service::Runner.run
