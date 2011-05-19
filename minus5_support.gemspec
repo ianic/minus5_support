@@ -11,7 +11,7 @@ GEMSPEC = Gem::Specification.new do |spec|
   
   spec.add_dependency('daemons'      , '~> 1.1.3')
   spec.add_dependency('activesupport', '~> 3.0.7')
-  spec.add_dependency('tiny_tds'     , '= 0.4.5.rc3')
+  #spec.add_dependency('tiny_tds'     , '= 0.4.5.rc3')
   
   spec.files = FileList['lib/*', 'lib/**/*', 'tasks/*' , 'bin/*', 'test/*','test/**/*', 'Rakefile'].to_a  
 

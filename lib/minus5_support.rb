@@ -9,7 +9,7 @@ require 'core/log.rb'
 require 'service/runner.rb'
 require 'service/starter.rb'
 require 'service/base.rb'
-require 'sql_server/sql_server_adapter.rb'
+#require 'sql_server/sql_server_adapter.rb'
 
 
 module Minus5

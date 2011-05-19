@@ -43,7 +43,7 @@ module Minus5
         end
         elapsed = 0        
         while !@terminate && elapsed < delay
-          Kernel::sleep (delay - elapsed < 1) ? (delay - elapsed) : 1
+          Kernel::sleep((delay - elapsed < 1) ? (delay - elapsed) : 1)
           elapsed = elapsed + 1           
         end
       end
