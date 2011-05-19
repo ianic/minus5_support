@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require "#{File.expand_path(File.dirname(__FILE__))}/../../minus5_libs/lib/minus5_libs"
-M5::Service::Runner.run
+Minus5::Service::Runner.run

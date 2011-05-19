@@ -23,12 +23,11 @@ module Minus5
   end
 
   def path_relative_to_start_script(relative)
-    File.absolute_path("#{File.expand_path(File.dirname($0))}#{relative}")
+    File.expand_path "#{File.expand_path(File.dirname($0))}#{relative}"
   end
 
   def start_script_name
     File.basename($0)
   end
-
 
 end

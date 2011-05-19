@@ -16,14 +16,14 @@ module Minus5
       #  runs command on sevice
       def run
         command = Minus5.start_script_name
-        app_root = Minus5.path_relative_to_start_script("/..")
-        service_name = File.basename(app_root)
-        class_name = service_name.camelize
-
-        require "#{app_root}/lib/#{service_name}.rb"
+        app_root = Minus5.path_relative_to_start_script("/..")        
         config = Minus5.load_config("#{app_root}/config/service.yml")
+        service_name = config[:app_name] || File.basename(app_root)
+                
+        class_name = service_name.camelize
         config = config.merge default_options(app_root, service_name)
-
+        
+        require "#{app_root}/lib/#{service_name}.rb"
         service = eval(class_name).new(config)
         if service.respond_to?(command)  
           service.send(command)
